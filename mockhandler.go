@@ -3,6 +3,7 @@ package httpmock
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"reflect"
 
 	"github.com/stretchr/testify/mock"
@@ -14,8 +15,8 @@ type MockHandler struct {
 }
 
 // Handle makes this implement the Handler interface.
-func (m *MockHandler) Handle(method, path string, body []byte) Response {
-	args := m.Called(method, path, body)
+func (m *MockHandler) Handle(method, path string, req *http.Request, body []byte) Response {
+	args := m.Called(method, path, req, body)
 	return args.Get(0).(Response)
 }
 

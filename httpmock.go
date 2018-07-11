@@ -58,7 +58,7 @@ import (
 
 // Handler is the interface used by httpmock instead of http.Handler so that it can be mocked very easily.
 type Handler interface {
-	Handle(method, path string, body []byte) Response
+	Handle(method, path string, req *http.Request, body []byte) Response
 }
 
 // Response holds the response a handler wants to return to the client.
@@ -119,7 +119,7 @@ func (h *httpToHTTPMockHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		log.Printf("Failed to read HTTP body in httpmock: %v", err)
 	}
-	resp := h.handler.Handle(r.Method, r.URL.Path, body)
+	resp := h.handler.Handle(r.Method, r.URL.Path, r, body)
 
 	for k, v := range resp.Header {
 		for _, val := range v {
