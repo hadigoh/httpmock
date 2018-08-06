@@ -50,6 +50,7 @@ Httpmock also provides helpers for checking calls using json objects, like so:
 package httpmock
 
 import (
+	"bytes"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -119,6 +120,7 @@ func (h *httpToHTTPMockHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		log.Printf("Failed to read HTTP body in httpmock: %v", err)
 	}
+	r.Body = ioutil.NopCloser(bytes.NewReader(body))
 	resp := h.handler.Handle(r.Method, r.URL.Path, r, body)
 
 	for k, v := range resp.Header {
